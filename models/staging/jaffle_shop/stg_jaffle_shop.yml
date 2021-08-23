@@ -1,0 +1,35 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: one unique customers
+    columns: 
+      - name: customer_id
+        description: primary key
+        tests:
+          - unique
+          - not_null
+      - name: first_name    
+        description: person first name 
+      - name: last_name    
+        description: person last name 
+
+  - name: stg_orders
+    columns: 
+      - name: status
+        description: "{{ doc('order_status') }}"
+        tests:
+          - accepted_values:
+              values:
+                - completed
+                - shipped
+                - returned
+                - placed
+                - return_pending
+      - name: customer_id
+        tests:
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id    
+      - name: order_date
+        description: item order date              
